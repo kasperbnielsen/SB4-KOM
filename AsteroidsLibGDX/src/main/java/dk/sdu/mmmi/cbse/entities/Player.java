@@ -31,6 +31,18 @@ public class Player extends SpaceObject {
         rotationSpeed = 3;
 
     }
+    
+    public float getX() {
+        return x;
+    }
+    
+    public float getY() {
+        return y;
+    }
+    
+    public float getRadians() {
+        return radians;
+    }
 
     private void setShape() {
         shapex[0] = x + MathUtils.cos(radians) * 8;
