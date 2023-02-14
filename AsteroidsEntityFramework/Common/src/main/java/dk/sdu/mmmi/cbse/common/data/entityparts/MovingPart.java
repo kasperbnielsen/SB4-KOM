@@ -7,9 +7,6 @@ package dk.sdu.mmmi.cbse.common.data.entityparts;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
-import static dk.sdu.mmmi.cbse.common.data.GameKeys.LEFT;
-import static dk.sdu.mmmi.cbse.common.data.GameKeys.RIGHT;
-import static dk.sdu.mmmi.cbse.common.data.GameKeys.UP;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
@@ -25,6 +22,7 @@ public class MovingPart
     private float deceleration, acceleration;
     private float maxSpeed, rotationSpeed;
     private boolean left, right, up;
+    private boolean wrap = true;
 
     public MovingPart(float deceleration, float acceleration, float maxSpeed, float rotationSpeed) {
         this.deceleration = deceleration;
@@ -59,6 +57,10 @@ public class MovingPart
 
     public void setUp(boolean up) {
         this.up = up;
+    }
+    
+    public void setWrap(boolean wrap) {
+        this.wrap = wrap;
     }
 
     @Override
@@ -97,19 +99,24 @@ public class MovingPart
 
         // set position
         x += dx * dt;
-        if (x > gameData.getDisplayWidth()) {
-            x = 0;
-        }
-        else if (x < 0) {
-            x = gameData.getDisplayWidth();
+        if(wrap) {
+            if (x > gameData.getDisplayWidth()) {
+                x = 0;
+            }
+            else if (x < 0) {
+                x = gameData.getDisplayWidth();
+            }
         }
 
         y += dy * dt;
-        if (y > gameData.getDisplayHeight()) {
-            y = 0;
-        }
-        else if (y < 0) {
-            y = gameData.getDisplayHeight();
+        
+        if(wrap) {
+            if (y > gameData.getDisplayHeight()) {
+                y = 0;
+            }
+            else if (y < 0) {
+                y = gameData.getDisplayHeight();
+            }
         }
 
         positionPart.setX(x);

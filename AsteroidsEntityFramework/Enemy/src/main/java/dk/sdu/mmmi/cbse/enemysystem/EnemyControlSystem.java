@@ -1,51 +1,59 @@
-package dk.sdu.mmmi.cbse.playersystem;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package dk.sdu.mmmi.cbse.enemysystem;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import static dk.sdu.mmmi.cbse.common.data.GameKeys.LEFT;
 import static dk.sdu.mmmi.cbse.common.data.GameKeys.RIGHT;
 import static dk.sdu.mmmi.cbse.common.data.GameKeys.UP;
-import static dk.sdu.mmmi.cbse.common.data.GameKeys.SPACE;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.cbse.commonbullet.Bullet;
 
 /**
  *
- * @author jcs
+ * @author tubni
  */
-public class PlayerControlSystem implements IEntityProcessingService {
+public class EnemyControlSystem implements IEntityProcessingService {
 
-    private PositionPart positionPart;
+    boolean isMoving = false;
+    
     @Override
     public void process(GameData gameData, World world) {
-
-        for (Entity player : world.getEntities(Player.class)) {
-            positionPart = player.getPart(PositionPart.class);
-            MovingPart movingPart = player.getPart(MovingPart.class);
-
-            movingPart.setLeft(gameData.getKeys().isDown(LEFT));
-            movingPart.setRight(gameData.getKeys().isDown(RIGHT));
-            movingPart.setUp(gameData.getKeys().isDown(UP));
+        for (Entity enemy : world.getEntities(Enemy.class)) {
+            PositionPart positionPart = enemy.getPart(PositionPart.class);
+            MovingPart movingPart = enemy.getPart(MovingPart.class);
             
-            movingPart.process(gameData, player);
-            positionPart.process(gameData, player);
-
-            player.setColor(new int[] {1, 1, 1, 1});
+            double random = Math.random();
             
-            updateShape(player);
-        }
-        
-        if(gameData.getKeys().isDown(SPACE)) {
-            Bullet bullet = new Bullet();
-            bullet.add(new PositionPart(positionPart.getX(), positionPart.getY(), positionPart.getRadians()));
-            bullet.add(new MovingPart(0, 100, 100, 0));
-            world.addEntity(bullet);
+
+            if(random < 0.2) {
+                movingPart.setLeft(true);
+            }
+            else if (random < 0.4) {
+                movingPart.setRight(true);
+            }
+            else if (random < 0.6) {
+                movingPart.setUp(false);
+                movingPart.setLeft(false);
+                movingPart.setRight(false);
+            } else if (random < 0.65) {
+                movingPart.setUp(true);
+            }
+            
+            enemy.setColor(new int[] {1, 0, 0, 0 });
+            
+            movingPart.process(gameData, enemy);
+            positionPart.process(gameData, enemy);
+
+            updateShape(enemy);
         }
     }
-
+    
     private void updateShape(Entity entity) {
         float[] shapex = entity.getShapeX();
         float[] shapey = entity.getShapeY();
@@ -69,5 +77,5 @@ public class PlayerControlSystem implements IEntityProcessingService {
         entity.setShapeX(shapex);
         entity.setShapeY(shapey);
     }
-
+    
 }

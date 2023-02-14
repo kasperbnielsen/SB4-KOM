@@ -12,7 +12,9 @@ public class Entity implements Serializable {
     private float[] shapeX = new float[4];
     private float[] shapeY = new float[4];
     private float radius;
+    private int[] color = new int[4];
     private Map<Class, EntityPart> parts;
+    private int timer = 100;
     
     public Entity() {
         parts = new ConcurrentHashMap<>();
@@ -37,6 +39,14 @@ public class Entity implements Serializable {
     public float getRadius(){
         return radius;
     }
+    
+    public void setColor(int[] colors) {
+        this.color = colors;
+    }
+    
+    public int[] getColor() {
+        return color;
+    }
 
     public String getID() {
         return ID.toString();
@@ -56,5 +66,13 @@ public class Entity implements Serializable {
 
     public void setShapeY(float[] shapeY) {
         this.shapeY = shapeY;
+    }
+    
+    public int getTimer() {
+        return timer;
+    }
+    
+    public void setTimer(int timer) {
+        this.timer = timer;
     }
 }
