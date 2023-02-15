@@ -4,13 +4,12 @@
 
 package dk.sdu.mmmi.cbse.asteroid;
 
+import dk.sdu.mmmi.cbse.common.data.Entity;
+
 /**
  *
  * @author tubni
  */
-public class Asteroid {
+public class Asteroid extends Entity {
 
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-    }
 }
