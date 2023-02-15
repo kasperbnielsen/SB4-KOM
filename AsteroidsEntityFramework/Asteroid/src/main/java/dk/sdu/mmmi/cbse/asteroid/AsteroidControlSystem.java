@@ -55,8 +55,8 @@ public class AsteroidControlSystem implements IEntityProcessingService {
         
         for(Entity asteroid : world.getEntities(Asteroid.class)) {
             
-            float[] shapeX = new float[4];
-            float[] shapeY = new float[4];
+            float[] shapeX = new float[10];
+            float[] shapeY = new float[10];
             
             MovingPart movingPart = asteroid.getPart(MovingPart.class);
             movingPart.setUp(true);
@@ -74,17 +74,13 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             float y = positionPart.getY();
             float radians = positionPart.getRadians();
             
-            shapeX[0] = (float) (x + Math.cos(radians + (random[0] * 3.1415f)) * (random[8] * 100));
-            shapeY[0] = (float) (y + Math.sin(radians + (random[1] * 3.1415f)) * (random[9] * 10));
-
-            shapeX[1] = (float) (x + Math.cos(radians + (random[2] * 3.1415f)) * (random[10] * 100));
-            shapeY[1] = (float) (y + Math.sin(radians + (random[3] * 3.1415f)) * (random[11] * 100));
-
-            shapeX[2] = (float) (x + Math.cos(radians + (random[4] * 3.1415f)) * (random[12] * 100));
-            shapeY[2] = (float) (y + Math.sin(radians + (random[5] * 3.1415f)) * (random[13] * 100));
-
-            shapeX[3] = (float) (x + Math.cos(radians + (random[6] * 3.1415f)) * (random[14] * 100));
-            shapeY[3] = (float) (y + Math.sin(radians + (random[7] * 3.1415f)) * (random[15] * 100));
+            for(int i = 0; i < shapeX.length; i++) {
+                shapeX[i] = (float) (x + Math.cos(radians + ((i+1)/10 * 3.1415f)) * ((double) 100/i));
+            }
+            
+            for(int i = 0; i < shapeY.length; i++) {
+                shapeY[i] = (float) (y + Math.sin(radians + ((i+1)/10 * 3.1415f)) * ((double) 100/i));
+            }
 
             asteroid.setShapeX(shapeX);
             asteroid.setShapeY(shapeY);
