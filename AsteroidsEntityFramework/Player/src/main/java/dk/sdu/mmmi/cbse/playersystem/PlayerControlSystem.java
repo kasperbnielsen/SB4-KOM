@@ -7,10 +7,13 @@ import static dk.sdu.mmmi.cbse.common.data.GameKeys.RIGHT;
 import static dk.sdu.mmmi.cbse.common.data.GameKeys.UP;
 import static dk.sdu.mmmi.cbse.common.data.GameKeys.SPACE;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityparts.CollisionPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.commonbullet.Bullet;
+import dk.sdu.mmmi.cbse.commonplayer.Player;
 
 /**
  *
@@ -19,6 +22,8 @@ import dk.sdu.mmmi.cbse.commonbullet.Bullet;
 public class PlayerControlSystem implements IEntityProcessingService {
 
     private PositionPart positionPart;
+    private int delay = 20;
+    
     @Override
     public void process(GameData gameData, World world) {
 
@@ -34,15 +39,22 @@ public class PlayerControlSystem implements IEntityProcessingService {
             positionPart.process(gameData, player);
 
             player.setColor(new int[] {1, 1, 1, 1});
+            player.setShape(1);
             
             updateShape(player);
         }
         
-        if(gameData.getKeys().isDown(SPACE)) {
+        if(gameData.getKeys().isDown(SPACE) && delay <= 0) {
             Bullet bullet = new Bullet();
+            bullet.setFriendly(true);
             bullet.add(new PositionPart(positionPart.getX(), positionPart.getY(), positionPart.getRadians()));
             bullet.add(new MovingPart(0, 100, 100, 0));
+            bullet.add(new CollisionPart(3, 3));
+            bullet.add(new LifePart(1));
             world.addEntity(bullet);
+            delay = 20;
+        } else {
+            delay--;
         }
     }
 

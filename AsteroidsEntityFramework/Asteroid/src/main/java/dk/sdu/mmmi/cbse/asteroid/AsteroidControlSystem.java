@@ -7,9 +7,12 @@ package dk.sdu.mmmi.cbse.asteroid;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityparts.CollisionPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
+import dk.sdu.mmmi.cbse.commonasteroid.Asteroid;
 
 /**
  *
@@ -48,6 +51,8 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             asteroid = new Asteroid();
             asteroid.add(new PositionPart(x, y, radians));
             asteroid.add(new MovingPart(0, 500, 100, 0));
+            asteroid.add(new CollisionPart(25, 25));
+            asteroid.add(new LifePart(1));
             world.addEntity(asteroid);
         }
         
@@ -55,8 +60,8 @@ public class AsteroidControlSystem implements IEntityProcessingService {
         
         for(Entity asteroid : world.getEntities(Asteroid.class)) {
             
-            float[] shapeX = new float[4];
-            float[] shapeY = new float[4];
+            float[] shapeX = new float[1];
+            float[] shapeY = new float[1];
             
             MovingPart movingPart = asteroid.getPart(MovingPart.class);
             movingPart.setUp(true);
@@ -69,22 +74,15 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             movingPart.process(gameData, asteroid);
             
             asteroid.setColor(new int[] {2, 1, 0, 0});
+            asteroid.setShape(2);
+            asteroid.setRadius(25);
             
             float x = positionPart.getX();
             float y = positionPart.getY();
             float radians = positionPart.getRadians();
             
-            shapeX[0] = (float) (x + Math.cos(radians + (random[0] * 3.1415f)) * (random[8] * 100));
-            shapeY[0] = (float) (y + Math.sin(radians + (random[1] * 3.1415f)) * (random[9] * 10));
-
-            shapeX[1] = (float) (x + Math.cos(radians + (random[2] * 3.1415f)) * (random[10] * 100));
-            shapeY[1] = (float) (y + Math.sin(radians + (random[3] * 3.1415f)) * (random[11] * 100));
-
-            shapeX[2] = (float) (x + Math.cos(radians + (random[4] * 3.1415f)) * (random[12] * 100));
-            shapeY[2] = (float) (y + Math.sin(radians + (random[5] * 3.1415f)) * (random[13] * 100));
-
-            shapeX[3] = (float) (x + Math.cos(radians + (random[6] * 3.1415f)) * (random[14] * 100));
-            shapeY[3] = (float) (y + Math.sin(radians + (random[7] * 3.1415f)) * (random[15] * 100));
+            shapeX[0] = x;
+            shapeY[0] = y;
 
             asteroid.setShapeX(shapeX);
             asteroid.setShapeY(shapeY);

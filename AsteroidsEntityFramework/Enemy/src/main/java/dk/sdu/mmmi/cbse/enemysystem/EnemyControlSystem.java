@@ -6,13 +6,15 @@ package dk.sdu.mmmi.cbse.enemysystem;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
-import static dk.sdu.mmmi.cbse.common.data.GameKeys.LEFT;
-import static dk.sdu.mmmi.cbse.common.data.GameKeys.RIGHT;
-import static dk.sdu.mmmi.cbse.common.data.GameKeys.UP;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityparts.CollisionPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
+import dk.sdu.mmmi.cbse.commonbullet.Bullet;
+import dk.sdu.mmmi.cbse.commonenemy.Enemy;
+
 
 /**
  *
@@ -21,16 +23,16 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 public class EnemyControlSystem implements IEntityProcessingService {
 
     boolean isMoving = false;
+    private int delay = 20;
+    PositionPart positionPart;
     
     @Override
     public void process(GameData gameData, World world) {
         for (Entity enemy : world.getEntities(Enemy.class)) {
-            PositionPart positionPart = enemy.getPart(PositionPart.class);
+            positionPart = enemy.getPart(PositionPart.class);
             MovingPart movingPart = enemy.getPart(MovingPart.class);
-            
             double random = Math.random();
             
-
             if(random < 0.2) {
                 movingPart.setLeft(true);
             }
@@ -46,11 +48,25 @@ public class EnemyControlSystem implements IEntityProcessingService {
             }
             
             enemy.setColor(new int[] {1, 0, 0, 0 });
+            enemy.setShape(1);
             
             movingPart.process(gameData, enemy);
             positionPart.process(gameData, enemy);
 
             updateShape(enemy);
+        }
+        
+        if(delay <= 0) {
+            Bullet bullet = new Bullet();
+            bullet.setFriendly(false);
+            bullet.add(new PositionPart(positionPart.getX(), positionPart.getY(), positionPart.getRadians()));
+            bullet.add(new MovingPart(0, 100, 100, 0));
+            bullet.add(new CollisionPart(3, 3));
+            bullet.add(new LifePart(1));
+            world.addEntity(bullet);
+            delay = 20;
+        } else {
+            delay--;
         }
     }
     

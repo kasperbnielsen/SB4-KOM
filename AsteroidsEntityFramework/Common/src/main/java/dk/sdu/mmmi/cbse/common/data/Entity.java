@@ -13,8 +13,10 @@ public class Entity implements Serializable {
     private float[] shapeY = new float[4];
     private float radius;
     private int[] color = new int[4];
+    private int shape;
     private Map<Class, EntityPart> parts;
-    private int timer = 100;
+    private int timer = 500;
+    private boolean friendly;
     
     public Entity() {
         parts = new ConcurrentHashMap<>();
@@ -74,5 +76,21 @@ public class Entity implements Serializable {
     
     public void setTimer(int timer) {
         this.timer = timer;
+    }
+    
+    public void setShape(int shape) {
+        this.shape = shape;
+    }
+    
+    public int getShape() {
+        return shape;
+    }
+    
+    public void setFriendly(boolean friendly) {
+        this.friendly = friendly;
+    }
+    
+    public boolean getFriendly() {
+        return friendly;
     }
 }
