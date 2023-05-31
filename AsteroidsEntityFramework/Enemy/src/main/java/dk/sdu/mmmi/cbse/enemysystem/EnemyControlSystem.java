@@ -54,20 +54,21 @@ public class EnemyControlSystem implements IEntityProcessingService {
             positionPart.process(gameData, enemy);
 
             updateShape(enemy);
+            
+            if(delay <= 0) {
+                Bullet bullet = new Bullet();
+                bullet.setFriendly(false);
+                bullet.add(new PositionPart(positionPart.getX(), positionPart.getY(), positionPart.getRadians()));
+                bullet.add(new MovingPart(0, 100, 100, 0));
+                bullet.add(new CollisionPart(3, 3));
+                bullet.add(new LifePart(1));
+                world.addEntity(bullet);
+                delay = 20;
+            } else {
+                delay--;
+            }
         }
         
-        if(delay <= 0) {
-            Bullet bullet = new Bullet();
-            bullet.setFriendly(false);
-            bullet.add(new PositionPart(positionPart.getX(), positionPart.getY(), positionPart.getRadians()));
-            bullet.add(new MovingPart(0, 100, 100, 0));
-            bullet.add(new CollisionPart(3, 3));
-            bullet.add(new LifePart(1));
-            world.addEntity(bullet);
-            delay = 20;
-        } else {
-            delay--;
-        }
     }
     
     private void updateShape(Entity entity) {

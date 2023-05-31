@@ -16,6 +16,8 @@ import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ServiceLoader;
+import static java.util.stream.Collectors.toList;
 
 public class Game implements ApplicationListener {
 
@@ -24,7 +26,6 @@ public class Game implements ApplicationListener {
 
     private final GameData gameData = new GameData();
     private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
-    private List<IGamePluginService> entityPlugins = new ArrayList<>();
     private List<IPostEntityProcessingService> entityPostProcessors = new ArrayList<>();
     private World world = new World();
 
@@ -151,6 +152,18 @@ public class Game implements ApplicationListener {
     @Override
     public void dispose() {
     }
+    
+    /*private Collection<? extends IGamePluginService> getPluginServices() {
+        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+    }
+
+    private Collection<? extends IEntityProcessingService> getProccesingServices() {
+        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+    }
+    
+       private Collection<? extends IPostEntityProcessingService> getPostProcessingServices() {
+        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+    }*/
     
     private Collection<? extends IGamePluginService> getPluginServices() {
         return SPILocator.locateAll(IGamePluginService.class);

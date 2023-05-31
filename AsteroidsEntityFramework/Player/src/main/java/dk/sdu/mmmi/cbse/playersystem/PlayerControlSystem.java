@@ -35,6 +35,20 @@ public class PlayerControlSystem implements IEntityProcessingService {
             movingPart.setRight(gameData.getKeys().isDown(RIGHT));
             movingPart.setUp(gameData.getKeys().isDown(UP));
             
+            if(gameData.getKeys().isDown(SPACE) && delay <= 0) {
+                System.out.println("shot fired");
+                Bullet bullet = new Bullet();
+                bullet.setFriendly(true);
+                bullet.add(new PositionPart(positionPart.getX(), positionPart.getY(), positionPart.getRadians()));
+                bullet.add(new MovingPart(0, 100, 100, 0));
+                bullet.add(new CollisionPart(3, 3));
+                bullet.add(new LifePart(1));
+                world.addEntity(bullet);
+                delay = 50;
+            } else {
+                delay--;
+            }
+            
             movingPart.process(gameData, player);
             positionPart.process(gameData, player);
 
@@ -42,19 +56,6 @@ public class PlayerControlSystem implements IEntityProcessingService {
             player.setShape(1);
             
             updateShape(player);
-        }
-        
-        if(gameData.getKeys().isDown(SPACE) && delay <= 0) {
-            Bullet bullet = new Bullet();
-            bullet.setFriendly(true);
-            bullet.add(new PositionPart(positionPart.getX(), positionPart.getY(), positionPart.getRadians()));
-            bullet.add(new MovingPart(0, 100, 100, 0));
-            bullet.add(new CollisionPart(3, 3));
-            bullet.add(new LifePart(1));
-            world.addEntity(bullet);
-            delay = 20;
-        } else {
-            delay--;
         }
     }
 

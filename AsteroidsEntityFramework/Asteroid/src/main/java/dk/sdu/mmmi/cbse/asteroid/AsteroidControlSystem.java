@@ -30,7 +30,9 @@ public class AsteroidControlSystem implements IEntityProcessingService {
     public void process(GameData gameData, World world) {
         
         for(Entity asteroid : world.getEntities(Asteroid.class)) {
-            counter++;
+            LifePart lp = asteroid.getPart(LifePart.class);
+            
+            if(!lp.getIsHit()) counter++;
         }
         
         
@@ -52,34 +54,36 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             asteroid.add(new PositionPart(x, y, radians));
             asteroid.add(new MovingPart(0, 500, 100, 0));
             asteroid.add(new CollisionPart(25, 25));
-            asteroid.add(new LifePart(1));
+            asteroid.add(new LifePart(2));
             world.addEntity(asteroid);
         }
         
         counter = 0;
         
         for(Entity asteroid : world.getEntities(Asteroid.class)) {
-            
             float[] shapeX = new float[1];
             float[] shapeY = new float[1];
-            
+            LifePart lifePart = asteroid.getPart(LifePart.class);
             MovingPart movingPart = asteroid.getPart(MovingPart.class);
+            
+            
             movingPart.setUp(true);
             movingPart.setRight(false);
             movingPart.setLeft(false);
             movingPart.setWrap(true);
+            movingPart.process(gameData, asteroid);
+            
             
             PositionPart positionPart = asteroid.getPart(PositionPart.class);
             positionPart.process(gameData, asteroid);
-            movingPart.process(gameData, asteroid);
             
             asteroid.setColor(new int[] {2, 1, 0, 0});
             asteroid.setShape(2);
-            asteroid.setRadius(25);
+            if(!lifePart.getIsHit()) asteroid.setRadius(25);
+            else if(lifePart.getIsHit()) asteroid.setRadius(10);
             
             float x = positionPart.getX();
             float y = positionPart.getY();
-            float radians = positionPart.getRadians();
             
             shapeX[0] = x;
             shapeY[0] = y;

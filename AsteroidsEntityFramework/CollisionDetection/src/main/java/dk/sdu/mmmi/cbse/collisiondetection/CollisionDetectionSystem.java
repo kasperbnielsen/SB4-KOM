@@ -13,8 +13,8 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.cbse.commonasteroid.Asteroid;
 import dk.sdu.mmmi.cbse.commonbullet.Bullet;
-import dk.sdu.mmmi.cbse.commonenemy.Enemy;
 import dk.sdu.mmmi.cbse.commonplayer.Player;
+import dk.sdu.mmmi.cbse.commonenemy.Enemy;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
@@ -28,8 +28,18 @@ public class CollisionDetectionSystem implements IPostEntityProcessingService {
     ArrayList<Ellipse2D> bulletList = new ArrayList<Ellipse2D>();
     ArrayList<Ellipse2D> asteroidList = new ArrayList<Ellipse2D>();
     
+    boolean playerCollisionDetected;
+    
+    public boolean getPlayerCollisionDetected() {
+        return playerCollisionDetected;
+    }
+    
     @Override
     public void process(GameData gameData, World world) {
+        checkForCollision(world);
+    }
+
+    public void checkForCollision(World world) {
         for (Entity bullet : world.getEntities(Bullet.class)) {
             CollisionPart collisionPart = bullet.getPart(CollisionPart.class);
             PositionPart positionPart = bullet.getPart(PositionPart.class);
@@ -53,7 +63,8 @@ public class CollisionDetectionSystem implements IPostEntityProcessingService {
                     asteroidcollisionPart.getHeight()
                 );
                 if(area.intersects(area2.getX(), area2.getY(), area2.getWidth(), area2.getHeight()) && bullet.getFriendly()) {
-                    world.removeEntity(asteroid);
+                    if(asteroidlifePart.getIsHit()) world.removeEntity(asteroid);
+                    else asteroidlifePart.setIsHit(true);
                     world.removeEntity(bullet);
                 }
                 
@@ -70,10 +81,14 @@ public class CollisionDetectionSystem implements IPostEntityProcessingService {
                     );
                     
                     if(playerArea.intersects(area.getX(), area.getY(), area.getWidth(), area.getHeight()) && !bullet.getFriendly()) {
+                        playerlifePart.setIsHit(true);
                         world.removeEntity(player);
+                        playerCollisionDetected = true;
                     }
                     if(playerArea.intersects(area2.getX(), area2.getY(), area2.getWidth(), area2.getHeight())) {
+                        playerlifePart.setIsHit(true);
                         world.removeEntity(player);
+                        playerCollisionDetected = true;
                     }
                 }
                     

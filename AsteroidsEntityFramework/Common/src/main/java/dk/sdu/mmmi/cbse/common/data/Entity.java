@@ -15,7 +15,7 @@ public class Entity implements Serializable {
     private int[] color = new int[4];
     private int shape;
     private Map<Class, EntityPart> parts;
-    private int timer = 500;
+    private int timer = 1000;
     private boolean friendly;
     
     public Entity() {

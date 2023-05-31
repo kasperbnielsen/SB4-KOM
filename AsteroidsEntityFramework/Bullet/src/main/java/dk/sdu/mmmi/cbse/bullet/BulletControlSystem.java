@@ -37,7 +37,6 @@ public class BulletControlSystem implements IEntityProcessingService {
             }
             
             if(lifePart.getLife() <= 0) {
-                System.out.println("life lost");
                 world.removeEntity(bullet);
             }
             
