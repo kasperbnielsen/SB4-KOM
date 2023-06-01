@@ -31,16 +31,7 @@ public class CollisionTest {
     public CollisionTest() {
     }
     
-    
-    
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-        
-    }
+    private CollisionDetectionSystem collisionDetection;
     
     @BeforeEach
     public void setUp() {
@@ -52,12 +43,15 @@ public class CollisionTest {
         
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    //Player entity
+    Player mockPlayer = new Player();
+        
+    //Asteroid entity
+    Asteroid mockAsteroid = new Asteroid();
+        
 
+    
+    
     
     @Test
     public void testPlayerCollision() {
@@ -65,24 +59,19 @@ public class CollisionTest {
         World world = mock(World.class);
         GameData gameData = mock(GameData.class);
         
-        Player mockPlayer = new Player();
-        mockPlayer.add(new PositionPart(100, 100, 3.14f));
-        mockPlayer.add(new CollisionPart(8, 8));
-        LifePart lp = new LifePart(1);
-        mockPlayer.add(lp);
-        world.addEntity(mockPlayer);
-        
-        Asteroid mockAsteroid = new Asteroid();
         mockAsteroid.add(new PositionPart(100, 100, 3.14f));
         mockAsteroid.add(new CollisionPart(25, 25));
-        world.addEntity(mockAsteroid);
+        world.addEntity(mockAsteroid);  
         
+        mockPlayer.add(new PositionPart(101, 101, 3.14f));
+        mockPlayer.add(new CollisionPart(8, 8));
+        world.addEntity(mockPlayer);
         
-        CollisionDetectionSystem mockSystem = mock(CollisionDetectionSystem.class);
-        mockSystem.process(gameData, world);
-        mockSystem.checkForCollision(world);
+        collisionDetection = new CollisionDetectionSystem();
         
-        //assertEquals( true, lp.getIsHit());
+        collisionDetection.process(gameData, world);
+        
+        assertTrue(collisionDetection.checkCollision(mockPlayer, mockAsteroid, true));
         
     }
 }

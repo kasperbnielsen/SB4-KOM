@@ -7,6 +7,13 @@ module Core {
     requires CommonPlayer;
     requires CollisionDetection;
     requires com.badlogic.gdx;
+    requires spring.context;
+    requires java.sql;
+    
+    exports dk.sdu.mmmi.cbse.providers;
+    exports dk.sdu.mmmi.cbse.main;
+    opens dk.sdu.mmmi.cbse.main to spring.core;
+    
     
     uses dk.sdu.mmmi.cbse.common.services.IGamePluginService;
     uses dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;

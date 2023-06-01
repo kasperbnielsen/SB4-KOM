@@ -13,6 +13,18 @@ You can copy and paste the single properties, into the pom.xml file and the IDE 
 That way multiple projects can share the same settings (useful for formatting rules for example).
 Any value defined here will override the pom.xml file value but is only applicable to the current project.
 -->
-        <netbeans.hint.jdkPlatform>JDK_1.9</netbeans.hint.jdkPlatform>
+        <netbeans.compile.on.save>none</netbeans.compile.on.save>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_RAWTYPES.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_RAWTYPES.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_OVERRIDES.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_OVERRIDES.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_UNCHECKED.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_UNCHECKED.enabled>
+        <org-netbeans-spi-editor-hints-projects.perProjectHintSettingsEnabled>true</org-netbeans-spi-editor-hints-projects.perProjectHintSettingsEnabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_DEPRECATED.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_DEPRECATED.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_UNNECESSARY_5f_CAST.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_UNNECESSARY_5f_CAST.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_FALLTHROUGH.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_FALLTHROUGH.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_SERIALIZATION.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_SERIALIZATION.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_FINALLY.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_FINALLY.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_EMPTY_5f_STATEMENT_5f_AFTER_5f_IF.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_EMPTY_5f_STATEMENT_5f_AFTER_5f_IF.enabled>
+        <org-netbeans-modules-javascript2-requirejs.enabled>true</org-netbeans-modules-javascript2-requirejs.enabled>
+        <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_DIVISION_5f_BY_5f_ZERO.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_DIVISION_5f_BY_5f_ZERO.enabled>
     </properties>
 </project-shared-configuration>

@@ -8,6 +8,11 @@
     </parent>
     <artifactId>CommonPlayer</artifactId>
     <packaging>jar</packaging>
+    <properties>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -15,7 +20,4 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    <properties>
-        <exec.mainClass>dk.sdu.mmmi.cbse.commonplayer.CommonPlayer</exec.mainClass>
-    </properties>
 </project>

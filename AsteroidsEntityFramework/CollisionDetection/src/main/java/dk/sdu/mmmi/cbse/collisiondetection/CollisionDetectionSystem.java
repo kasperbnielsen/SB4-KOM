@@ -24,22 +24,62 @@ import java.util.ArrayList;
  * @author Kasper
  */
 public class CollisionDetectionSystem implements IPostEntityProcessingService {
-
-    ArrayList<Ellipse2D> bulletList = new ArrayList<Ellipse2D>();
-    ArrayList<Ellipse2D> asteroidList = new ArrayList<Ellipse2D>();
-    
-    boolean playerCollisionDetected;
-    
-    public boolean getPlayerCollisionDetected() {
-        return playerCollisionDetected;
-    }
     
     @Override
     public void process(GameData gameData, World world) {
-        checkForCollision(world);
+        for (Entity bullet : world.getEntities(Bullet.class)) {
+            for (Entity asteroid : world.getEntities(Asteroid.class)) {
+                LifePart asteroidLifePart = asteroid.getPart(LifePart.class);
+                if(checkCollision(asteroid, bullet, bullet.getFriendly())) {
+                    if(asteroidLifePart.getIsHit()) world.removeEntity(asteroid);
+                    else asteroidLifePart.setIsHit(true);
+                    world.removeEntity(bullet);
+                }
+                for(Entity player : world.getEntities(Player.class)) {
+                    if(checkCollision(player, bullet, !bullet.getFriendly())) world.removeEntity(player);
+                    if(checkCollision(player, asteroid, true)) world.removeEntity(player);
+                }
+            }
+            for(Entity enemy : world.getEntities(Enemy.class)) {
+                if(checkCollision(enemy, bullet, bullet.getFriendly()))
+                    world.removeEntity(enemy);
+            }
+        }
+        
+
+    }
+    
+    public <T extends Entity> boolean checkCollision(T e, T e2, boolean friendly) {
+        
+            CollisionPart collisionPart = e.getPart(CollisionPart.class);
+            PositionPart positionPart = e.getPart(PositionPart.class);
+            LifePart lifePart = e.getPart(LifePart.class);
+            
+            Ellipse2D area = new Ellipse2D.Float(
+                    positionPart.getX(),
+                    positionPart.getY(),
+                    collisionPart.getWidth(),
+                    collisionPart.getHeight()
+            );
+            
+            CollisionPart collisionPart2 = e2.getPart(CollisionPart.class);
+            PositionPart positionPart2 = e2.getPart(PositionPart.class);
+            LifePart lifePart2 = e2.getPart(LifePart.class);
+            
+            Ellipse2D area2 = new Ellipse2D.Float(
+                    positionPart2.getX(),
+                    positionPart2.getY(),
+                    collisionPart2.getWidth(),
+                    collisionPart2.getHeight()
+            );
+            
+            if(area.intersects(area2.getX(), area2.getY(), area2.getWidth(), area2.getHeight()) && friendly) {
+                    return true;
+            } else return false;
+            
     }
 
-    public void checkForCollision(World world) {
+    /*public void checkForCollision(World world) {
         for (Entity bullet : world.getEntities(Bullet.class)) {
             CollisionPart collisionPart = bullet.getPart(CollisionPart.class);
             PositionPart positionPart = bullet.getPart(PositionPart.class);
@@ -81,15 +121,12 @@ public class CollisionDetectionSystem implements IPostEntityProcessingService {
                     );
                     
                     if(playerArea.intersects(area.getX(), area.getY(), area.getWidth(), area.getHeight()) && !bullet.getFriendly()) {
-                        playerlifePart.setIsHit(true);
                         world.removeEntity(player);
-                        playerCollisionDetected = true;
-                    }
-                    if(playerArea.intersects(area2.getX(), area2.getY(), area2.getWidth(), area2.getHeight())) {
-                        playerlifePart.setIsHit(true);
+                        return true;
+                    } else if(playerArea.intersects(area2.getX(), area2.getY(), area2.getWidth(), area2.getHeight())) {
                         world.removeEntity(player);
-                        playerCollisionDetected = true;
-                    }
+                        return true;
+                    } else return false;
                 }
                     
             }
@@ -109,8 +146,8 @@ public class CollisionDetectionSystem implements IPostEntityProcessingService {
                     world.removeEntity(enemy);
                 }
             }
-            
         }
-    }
+        //return false;
+    } */
 
 }
