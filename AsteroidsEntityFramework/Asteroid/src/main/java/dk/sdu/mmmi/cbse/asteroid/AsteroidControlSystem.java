@@ -65,7 +65,7 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             float[] shapeY = new float[1];
             LifePart lifePart = asteroid.getPart(LifePart.class);
             MovingPart movingPart = asteroid.getPart(MovingPart.class);
-            
+          
             
             movingPart.setUp(true);
             movingPart.setRight(false);
