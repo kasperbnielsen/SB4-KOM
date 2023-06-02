@@ -1,23 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
-
 import dk.sdu.mmmi.cbse.collisiondetection.CollisionDetectionSystem;
-import dk.sdu.mmmi.cbse.common.data.Entity;
-import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.CollisionPart;
-import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
-import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.commonasteroid.Asteroid;
+import dk.sdu.mmmi.cbse.commonbullet.Bullet;
+import dk.sdu.mmmi.cbse.commonenemy.Enemy;
 import dk.sdu.mmmi.cbse.commonplayer.Player;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,34 +18,23 @@ public class CollisionTest {
     
     public CollisionTest() {
     }
-    
-    private CollisionDetectionSystem collisionDetection;
-    
-    @BeforeEach
-    public void setUp() {
-        
-    }
-    
-    @AfterEach
-    public void tearDown() {
-        
-    }
 
     //Player entity
     Player mockPlayer = new Player();
         
-    //Asteroid entity
+    //Asteroid entitiy
     Asteroid mockAsteroid = new Asteroid();
+    
+    //Bullet entity
+    Bullet mockBullet = new Bullet();
+    
+    //Enemy entity
+    Enemy mockEnemy = new Enemy();
         
-
-    
-    
-    
     @Test
     public void testPlayerCollision() {
         
         World world = mock(World.class);
-        GameData gameData = mock(GameData.class);
         
         mockAsteroid.add(new PositionPart(100, 100, 3.14f));
         mockAsteroid.add(new CollisionPart(25, 25));
@@ -67,11 +44,25 @@ public class CollisionTest {
         mockPlayer.add(new CollisionPart(8, 8));
         world.addEntity(mockPlayer);
         
-        collisionDetection = new CollisionDetectionSystem();
+        CollisionDetectionSystem collisionDetection = new CollisionDetectionSystem();
         
-        collisionDetection.process(gameData, world);
+        assertTrue(collisionDetection.checkCollision(mockPlayer, mockAsteroid, true));       
+    }
+    
+    @Test
+    public void testNoCollision() {
+        World world = mock(World.class);
         
-        assertTrue(collisionDetection.checkCollision(mockPlayer, mockAsteroid, true));
+        mockEnemy.add(new PositionPart(100, 100, 3.14f));
+        mockEnemy.add(new CollisionPart(10, 10));
+        world.addEntity(mockEnemy);  
         
+        mockBullet.add(new PositionPart(125, 125, 3.14f));
+        mockBullet.add(new CollisionPart(3, 3));
+        world.addEntity(mockBullet);
+        
+        CollisionDetectionSystem collisionDetection = new CollisionDetectionSystem();
+        
+        assertFalse(collisionDetection.checkCollision(mockEnemy, mockBullet, true));
     }
 }

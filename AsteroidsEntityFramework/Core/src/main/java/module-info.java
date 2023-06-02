@@ -10,7 +10,6 @@ module Core {
     requires spring.context;
     requires java.sql;
     
-    exports dk.sdu.mmmi.cbse.providers;
     exports dk.sdu.mmmi.cbse.main;
     opens dk.sdu.mmmi.cbse.main to spring.core;
     
