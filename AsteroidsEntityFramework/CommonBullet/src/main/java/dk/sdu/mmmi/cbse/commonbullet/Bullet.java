@@ -11,4 +11,5 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
  * @author tubni
  */
 public class Bullet extends Entity {
+    
 }

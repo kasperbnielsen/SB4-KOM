@@ -5,40 +5,39 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import dk.sdu.mmmi.cbse.asteroid.AsteroidControlSystem;
-import dk.sdu.mmmi.cbse.asteroid.AsteroidPlugin;
-import dk.sdu.mmmi.cbse.bullet.BulletControlSystem;
-import dk.sdu.mmmi.cbse.bullet.BulletPlugin;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
-import dk.sdu.mmmi.cbse.enemysystem.EnemyControlSystem;
+import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.cbse.common.util.SPILocator;
 import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
-import dk.sdu.mmmi.cbse.playersystem.PlayerControlSystem;
-import dk.sdu.mmmi.cbse.playersystem.PlayerPlugin;
-import dk.sdu.mmmi.cbse.enemysystem.EnemyPlugin;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class Game
-        implements ApplicationListener {
+public class Game implements ApplicationListener {
 
     private static OrthographicCamera cam;
     private ShapeRenderer sr;
 
     private final GameData gameData = new GameData();
-    private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
-    private List<IGamePluginService> entityPlugins = new ArrayList<>();
+    private List<IGamePluginService> pluginServices;
+    private List<IEntityProcessingService> entityProcessors;
+    private List<IPostEntityProcessingService> entityPostProcessors;
     private World world = new World();
+    
+    public Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessors, List<IPostEntityProcessingService> postEntityProcessors) {
+        this.pluginServices = gamePluginServices;
+        this.entityProcessors = entityProcessors;
+        this.entityPostProcessors = postEntityProcessors;
+    }
 
     @Override
     public void create() {
-
+        
         gameData.setDisplayWidth(Gdx.graphics.getWidth());
         gameData.setDisplayHeight(Gdx.graphics.getHeight());
-
         cam = new OrthographicCamera(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         cam.translate(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
         cam.update();
@@ -48,33 +47,8 @@ public class Game
         Gdx.input.setInputProcessor(
                 new GameInputProcessor(gameData)
         );
-
-        IGamePluginService playerPlugin = new PlayerPlugin();
-
-        IEntityProcessingService playerProcess = new PlayerControlSystem();
-        entityPlugins.add(playerPlugin);
-        entityProcessors.add(playerProcess);
         
-        IGamePluginService enemyPlugin = new EnemyPlugin();
-        
-        IEntityProcessingService enemyProcess = new EnemyControlSystem();
-        entityPlugins.add(enemyPlugin);
-        entityProcessors.add(enemyProcess);
-        
-        IGamePluginService bulletPlugin = new BulletPlugin();
-        
-        IEntityProcessingService bulletProcess = new BulletControlSystem();
-        entityPlugins.add(bulletPlugin);
-        entityProcessors.add(bulletProcess);
-        
-        IGamePluginService asteroidPlugin = new AsteroidPlugin();
-        
-        IEntityProcessingService asteroidProcess = new AsteroidControlSystem();
-        entityPlugins.add(asteroidPlugin);
-        entityProcessors.add(asteroidProcess);
-        
-        // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : entityPlugins) {
+        for (IGamePluginService iGamePlugin : pluginServices) {
             iGamePlugin.start(gameData, world);
         }
     }
@@ -97,29 +71,43 @@ public class Game
 
     private void update() {
         // Update
-        for (IEntityProcessingService entityProcessorService : entityProcessors) {
-            entityProcessorService.process(gameData, world);
-        }
+            for (IEntityProcessingService entityProcessorService : entityProcessors) {
+                entityProcessorService.process(gameData, world);
+            }
+            for (IPostEntityProcessingService postEntityProcessorService : entityPostProcessors) {
+                postEntityProcessorService.process(gameData, world);
+            }
     }
 
     private void draw() {
         for (Entity entity : world.getEntities()) {
             
+            entity.getRadius();
             int[] colors = entity.getColor();
             sr.setColor(colors[0], colors[1], colors[2], colors[3]);
-            sr.begin(ShapeRenderer.ShapeType.Line);
-
+            float radius = entity.getRadius();
             float[] shapex = entity.getShapeX();
             float[] shapey = entity.getShapeY();
+            
+            
+            if(entity.getShape() == 1) {
+                sr.begin(ShapeRenderer.ShapeType.Line);
 
-            for (int i = 0, j = shapex.length - 1;
+                for (int i = 0, j = shapex.length - 1;
                     i < shapex.length;
                     j = i++) {
 
                 sr.line(shapex[i], shapey[i], shapex[j], shapey[j]);
-            }
+                }   
 
-            sr.end();
+                sr.end();
+            } else if(entity.getShape() == 2) {
+                sr.begin(ShapeRenderer.ShapeType.Filled);
+                
+                sr.circle(shapex[0], shapey[0], radius);
+                
+                sr.end();
+            }
         }
     }
 
@@ -138,4 +126,5 @@ public class Game
     @Override
     public void dispose() {
     }
+  
 }

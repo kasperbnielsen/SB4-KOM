@@ -4,15 +4,19 @@
     <parent>
         <groupId>dk.sdu.mmmi.cbse</groupId>
         <artifactId>AsteroidsEntityFramework</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>Bullet</artifactId>
-    <packaging>jar</packaging>
+    <properties>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>dk.sdu.mmmi.cbse</groupId>
             <artifactId>Common</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -20,7 +24,4 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    <properties>
-        <exec.mainClass>dk.sdu.mmmi.cbse.bullet.Bullet</exec.mainClass>
-    </properties>
 </project>
